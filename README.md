@@ -30,4 +30,5 @@ $ $(gcloud beta emulators datastore env-init)
 
 ## Author
 
-[178inaba](https://github.com/178inaba)
+Masahiro Furudate (a.k.a. [178inaba](https://github.com/178inaba))  
+<178inaba.git@gmail.com>
