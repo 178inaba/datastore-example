@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"fmt"
+	"net/url"
 	"time"
 
 	"cloud.google.com/go/datastore"
@@ -10,9 +12,16 @@ import (
 
 // Task is the model used to store tasks in the datastore.
 type Task struct {
-	Description string    `datastore:"description"`
-	Done        bool      `datastore:"done"`
-	CreatedAt   time.Time `datastore:"created"`
+	ID          *datastore.Key `datastore:"__key__"`
+	Description string
+	Done        bool
+	CreatedAt   time.Time
+
+	Metadata Metadata
+}
+
+type Metadata struct {
+	URL *url.URL
 }
 
 type TaskRepository struct {
@@ -26,9 +35,18 @@ func NewTaskRepository(client *datastore.Client) *TaskRepository {
 // AddTask adds a task with the given description to the datastore,
 // returning the key of the newly created entity.
 func (r *TaskRepository) AddTask(ctx context.Context, description string, createdAt time.Time) (*datastore.Key, error) {
+	u, err := url.Parse("https://github.com/golang/go/issues/1")
+	if err != nil {
+		return nil, fmt.Errorf("parse rawurl: %w", err)
+	}
+
 	task := &Task{
 		Description: description,
 		CreatedAt:   createdAt,
+
+		Metadata: Metadata{
+			URL: u,
+		},
 	}
 
 	key := datastore.IncompleteKey("Task", nil)
@@ -65,21 +83,23 @@ func (r *TaskRepository) DeleteTask(ctx context.Context, taskID int64) error {
 func (r *TaskRepository) ListTasks(ctx context.Context) ([]*entity.Task, error) {
 	// Create a query to fetch all Task entities, ordered by "created".
 	var ts []*Task
-	query := datastore.NewQuery("Task").Order("created")
+	query := datastore.NewQuery("Task").Order("CreatedAt")
 	keys, err := r.client.GetAll(ctx, query, &ts)
 	if err != nil {
-		return nil, err
+		if _, ok := err.(*datastore.ErrFieldMismatch); !ok {
+			return nil, fmt.Errorf("get all: %w", err)
+		}
 	}
 
 	// Repack Task into entity.Task.
-	var tasks []*entity.Task
+	tasks := make([]*entity.Task, len(keys))
 	for i, key := range keys {
-		tasks = append(tasks, &entity.Task{
-			ID:          key.ID,
-			Description: tasks[i].Description,
-			Done:        tasks[i].Done,
-			CreatedAt:   tasks[i].CreatedAt,
-		})
+		tasks[i] = &entity.Task{
+			ID:          key,
+			Description: ts[i].Description,
+			Done:        ts[i].Done,
+			CreatedAt:   ts[i].CreatedAt,
+		}
 	}
 
 	return tasks, nil

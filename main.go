@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -27,5 +28,14 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fmt.Println("Key of added task:")
 	pp.Println(k)
+
+	ts, err := tr.ListTasks(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Tasks:")
+	pp.Println(ts)
 }
