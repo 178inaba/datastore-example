@@ -50,8 +50,12 @@ func (r *TaskRepository) AddTask(ctx context.Context, description string, create
 	}
 
 	key := datastore.IncompleteKey("Task", nil)
+	keys, err := r.client.AllocateIDs(ctx, []*datastore.Key{key})
+	if err != nil {
+		return nil, fmt.Errorf("allocate IDs: %w", err)
+	}
 
-	return r.client.Put(ctx, key, task)
+	return r.client.Put(ctx, keys[0], task)
 }
 
 // MarkDone marks the task done with the given ID.
