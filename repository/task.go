@@ -106,6 +106,7 @@ func (r *TaskRepository) ListTasks(ctx context.Context) ([]*entity.Task, error) 
 			ID:          key,
 			Description: ts[i].Description,
 			Done:        ts[i].Done,
+			Due:         ts[i].Due,
 			CreatedAt:   ts[i].CreatedAt,
 		}
 	}
