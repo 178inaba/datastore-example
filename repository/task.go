@@ -15,6 +15,7 @@ type Task struct {
 	ID          *datastore.Key `datastore:"__key__"`
 	Description string
 	Done        bool
+	Due         time.Time
 	CreatedAt   time.Time
 
 	Metadata Metadata
