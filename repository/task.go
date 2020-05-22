@@ -15,6 +15,7 @@ import (
 type Task struct {
 	ID          *datastore.Key `datastore:"__key__"`
 	Description string
+	Text        string
 	Done        bool
 	Due         time.Time `datastore:",omitempty"`
 	CreatedAt   time.Time
