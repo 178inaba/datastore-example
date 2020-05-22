@@ -14,5 +14,6 @@ type Task struct {
 	ID          TaskID
 	Description string
 	Done        bool
+	Due         time.Time
 	CreatedAt   time.Time
 }
