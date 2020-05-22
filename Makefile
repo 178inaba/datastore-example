@@ -1,6 +1,6 @@
 LOCAL_PACKAGE_PREFIX := github.com/178inaba/datastore-example
 
-.PHONY: all fmt fmt-diff ci-lint ci-lint-fix lint vet test install-tools
+.PHONY: all fmt fmt-diff ci-lint ci-lint-fix lint vet test auth-gcp install-tools
 
 all: fmt ci-lint-fix vet lint ci-lint test
 
@@ -24,6 +24,9 @@ vet:
 
 test:
 	go test -race -count 1 -cover
+
+auth-gcp:
+	gcloud auth application-default login
 
 install-tools:
 	GO111MODULE=off go get -u golang.org/x/lint/golint golang.org/x/tools/cmd/goimports

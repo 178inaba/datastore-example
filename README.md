@@ -24,6 +24,13 @@ Set environment variables.
 $ $(gcloud beta emulators datastore env-init)
 ```
 
+## Run Cloud
+
+```console
+$ make auth-gcp
+$ GCP_PROJECT=<project-id> go run main.go
+```
+
 ## License
 
 [MIT](LICENSE)
