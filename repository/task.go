@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/datastore"
+
 	"github.com/178inaba/datastore-example/entity"
 )
 
@@ -18,17 +19,19 @@ type Task struct {
 	Due         time.Time
 	CreatedAt   time.Time
 
-	Metadata Metadata
+	Metadata metadata
 }
 
-type Metadata struct {
+type metadata struct {
 	URL *url.URL
 }
 
+// TaskRepository is task repository.
 type TaskRepository struct {
 	client *datastore.Client
 }
 
+// NewTaskRepository returns task repository.
 func NewTaskRepository(client *datastore.Client) *TaskRepository {
 	return &TaskRepository{client: client}
 }
@@ -45,7 +48,7 @@ func (r *TaskRepository) AddTask(ctx context.Context, description string, create
 		Description: description,
 		CreatedAt:   createdAt,
 
-		Metadata: Metadata{
+		Metadata: metadata{
 			URL: u,
 		},
 	}

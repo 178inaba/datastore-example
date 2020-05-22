@@ -8,8 +8,9 @@ import (
 	"time"
 
 	"cloud.google.com/go/datastore"
-	"github.com/178inaba/datastore-example/repository"
 	"github.com/k0kubun/pp"
+
+	"github.com/178inaba/datastore-example/repository"
 )
 
 func main() {
