@@ -38,4 +38,12 @@ func main() {
 
 	fmt.Println("Tasks:")
 	pp.Println(ts)
+
+	keyTs, err := tr.FilterKey(ctx, k)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Task:")
+	pp.Println(keyTs)
 }
