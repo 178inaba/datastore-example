@@ -1,9 +1,9 @@
 name: goreleaser
 
 on:
-  push
+  push:
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   goreleaser:
