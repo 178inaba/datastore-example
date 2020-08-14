@@ -10,7 +10,8 @@ builds:
       - windows
       - darwin
 archives:
-  -
+  - id: tar.gz
+    format: tar.gz
   - id: binary
     format: binary
 checksum:
