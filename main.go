@@ -36,7 +36,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Tasks:")
+	fmt.Println("ListTasks:")
 	pp.Println(ts)
 
 	keyTs, err := tr.FilterKey(ctx, k)
@@ -44,6 +44,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Task:")
+	fmt.Println("FilterKey:")
 	pp.Println(keyTs)
+
+	descTs, err := tr.FilterDescription(ctx, "filter")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("FileterDescription:")
+	pp.Println(descTs)
 }

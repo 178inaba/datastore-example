@@ -140,3 +140,29 @@ func (r *TaskRepository) FilterKey(ctx context.Context, key *datastore.Key) ([]*
 
 	return tasks, nil
 }
+
+// FilterDescription returns tasks by description.
+func (r *TaskRepository) FilterDescription(ctx context.Context, description string) ([]*entity.Task, error) {
+	// Create a query to fetch Task entities by key.
+	var ts []*Task
+	keys, err := r.client.GetAll(ctx, datastore.NewQuery("Task").Filter("Description =", description), &ts)
+	if err != nil {
+		if _, ok := err.(*datastore.ErrFieldMismatch); !ok {
+			return nil, fmt.Errorf("get all: %w", err)
+		}
+	}
+
+	// Repack Task into entity.Task.
+	tasks := make([]*entity.Task, len(keys))
+	for i, key := range keys {
+		tasks[i] = &entity.Task{
+			ID:          key,
+			Description: ts[i].Description,
+			Done:        ts[i].Done,
+			Due:         ts[i].Due,
+			CreatedAt:   ts[i].CreatedAt,
+		}
+	}
+
+	return tasks, nil
+}
