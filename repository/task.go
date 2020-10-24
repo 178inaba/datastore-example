@@ -14,8 +14,8 @@ import (
 // Task is the model used to store tasks in the datastore.
 type Task struct {
 	ID          *datastore.Key `datastore:"__key__"`
-	Description string
-	Text        string
+	Description string         `datastore:",omitempty"`
+	Text        string         `datastore:",omitempty"`
 	Done        bool
 	Due         time.Time `datastore:",omitempty"`
 	CreatedAt   time.Time
@@ -39,7 +39,7 @@ func NewTaskRepository(client *datastore.Client) *TaskRepository {
 
 // AddTask adds a task with the given description to the datastore,
 // returning the key of the newly created entity.
-func (r *TaskRepository) AddTask(ctx context.Context, description string, createdAt time.Time) (*datastore.Key, error) {
+func (r *TaskRepository) AddTask(ctx context.Context, description, text string, createdAt time.Time) (*datastore.Key, error) {
 	u, err := url.Parse("https://github.com/golang/go/issues/1")
 	if err != nil {
 		return nil, fmt.Errorf("parse rawurl: %w", err)
@@ -47,6 +47,7 @@ func (r *TaskRepository) AddTask(ctx context.Context, description string, create
 
 	task := &Task{
 		Description: description,
+		Text:        text,
 		CreatedAt:   createdAt,
 
 		Metadata: metadata{
@@ -165,4 +166,14 @@ func (r *TaskRepository) FilterDescription(ctx context.Context, description stri
 	}
 
 	return tasks, nil
+}
+
+// CountAll returns all task count.
+func (r *TaskRepository) CountAll(ctx context.Context) (int, error) {
+	return r.client.Count(ctx, datastore.NewQuery("Task"))
+}
+
+// CountDescNotNull returns description not null task count.
+func (r *TaskRepository) CountDescNotNull(ctx context.Context) (int, error) {
+	return r.client.Count(ctx, datastore.NewQuery("Task").Filter("Description >", ""))
 }

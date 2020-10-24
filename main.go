@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -14,6 +15,11 @@ import (
 )
 
 func main() {
+	var desc, text string
+	flag.StringVar(&desc, "d", "", "Task description")
+	flag.StringVar(&text, "t", "", "Task text")
+	flag.Parse()
+
 	ctx := context.Background()
 
 	c, err := datastore.NewClient(ctx, os.Getenv("GCP_PROJECT"))
@@ -23,7 +29,7 @@ func main() {
 
 	tr := repository.NewTaskRepository(c)
 
-	k, err := tr.AddTask(ctx, "test description", time.Now())
+	k, err := tr.AddTask(ctx, desc, text, time.Now())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,4 +60,17 @@ func main() {
 
 	fmt.Println("FileterDescription:")
 	pp.Println(descTs)
+
+	allCnt, err := tr.CountAll(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	descNotNullCnt, err := tr.CountDescNotNull(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("All Count: %d\n", allCnt)
+	fmt.Printf("Description Not Null Count: %d\n", descNotNullCnt)
 }
