@@ -61,13 +61,14 @@ func main() {
 	fmt.Println("FileterDescription:")
 	pp.Println(descTs)
 
-	ids, err := tr.GetTaskIDsFilterDescription(ctx, "test description")
+	ids, err := tr.GetTaskIDsFilterDescription(ctx, "test description2")
 	if err != nil {
 		log.Fatalf("GetTaskIDsFilterDescription: %v.", err)
 	}
 
 	fmt.Println("GetTaskIDsFilterDescription:")
 	pp.Println(ids)
+	pp.Println(len(ids))
 
 	allCnt, err := tr.CountAll(ctx)
 	if err != nil {
