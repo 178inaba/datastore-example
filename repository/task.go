@@ -168,6 +168,23 @@ func (r *TaskRepository) FilterDescription(ctx context.Context, description stri
 	return tasks, nil
 }
 
+// GetTaskIDsFilterDescription returns task IDs by description.
+func (r *TaskRepository) GetTaskIDsFilterDescription(ctx context.Context, description string) ([]entity.TaskID, error) {
+	keys, err := r.client.GetAll(ctx, datastore.NewQuery("Task").Filter("Description =", description), &[]*Task{})
+	if err != nil {
+		if _, ok := err.(*datastore.ErrFieldMismatch); !ok {
+			return nil, fmt.Errorf("get all: %w", err)
+		}
+	}
+
+	ids := make([]entity.TaskID, len(keys))
+	for i, key := range keys {
+		ids[i] = key
+	}
+
+	return ids, nil
+}
+
 // CountAll returns all task count.
 func (r *TaskRepository) CountAll(ctx context.Context) (int, error) {
 	return r.client.Count(ctx, datastore.NewQuery("Task"))

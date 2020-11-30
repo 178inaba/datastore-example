@@ -53,13 +53,21 @@ func main() {
 	fmt.Println("FilterKey:")
 	pp.Println(keyTs)
 
-	descTs, err := tr.FilterDescription(ctx, "filter")
+	descTs, err := tr.FilterDescription(ctx, "test description")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println("FileterDescription:")
 	pp.Println(descTs)
+
+	ids, err := tr.GetTaskIDsFilterDescription(ctx, "test description")
+	if err != nil {
+		log.Fatalf("GetTaskIDsFilterDescription: %v.", err)
+	}
+
+	fmt.Println("GetTaskIDsFilterDescription:")
+	pp.Println(ids)
 
 	allCnt, err := tr.CountAll(ctx)
 	if err != nil {
