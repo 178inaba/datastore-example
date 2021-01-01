@@ -61,7 +61,8 @@ func (r *TaskRepository) AddTask(ctx context.Context, description, text string, 
 		return nil, fmt.Errorf("allocate IDs: %w", err)
 	}
 
-	//ks, err := r.client.PutMulti(ctx, keys, []*Task{&task})
+	//tasks := []*Task{&task}
+	//ks, err := r.client.PutMulti(ctx, keys, tasks)
 	//if err != nil {
 	//	return nil, fmt.Errorf("put multi: %w", err)
 	//}
