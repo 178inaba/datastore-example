@@ -45,7 +45,7 @@ func (r *TaskRepository) AddTask(ctx context.Context, description, text string, 
 		return nil, fmt.Errorf("parse rawurl: %w", err)
 	}
 
-	task := &Task{
+	task := Task{
 		Description: description,
 		Text:        text,
 		CreatedAt:   createdAt,
@@ -61,7 +61,13 @@ func (r *TaskRepository) AddTask(ctx context.Context, description, text string, 
 		return nil, fmt.Errorf("allocate IDs: %w", err)
 	}
 
-	return r.client.Put(ctx, keys[0], task)
+	//ks, err := r.client.PutMulti(ctx, keys, []*Task{&task})
+	//if err != nil {
+	//	return nil, fmt.Errorf("put multi: %w", err)
+	//}
+
+	//return ks[0], nil
+	return r.client.Put(ctx, keys[0], &task)
 }
 
 // MarkDone marks the task done with the given ID.
@@ -107,6 +113,7 @@ func (r *TaskRepository) ListTasks(ctx context.Context) ([]*entity.Task, error) 
 		tasks[i] = &entity.Task{
 			ID:          key,
 			Description: ts[i].Description,
+			Text:        ts[i].Text,
 			Done:        ts[i].Done,
 			Due:         ts[i].Due,
 			CreatedAt:   ts[i].CreatedAt,
