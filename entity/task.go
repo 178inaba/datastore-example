@@ -13,6 +13,7 @@ type TaskID *datastore.Key
 type Task struct {
 	ID          TaskID
 	Description string
+	Text        string
 	Done        bool
 	Due         time.Time
 	CreatedAt   time.Time
